@@ -1,15 +1,17 @@
+from typing import TypedDict
 import requests
 from bs4 import BeautifulSoup
+from algoliasearch.search_client import SearchClient
 
-Entry = dict['elem_id': str,
-             'title': str,
-             'url': str,
-             'company': str,
-             'address': str,
-             'benefits': str]
+Entry = TypedDict('Entry', {'elem_id': str,
+                            'title': str,
+                            'url': str,
+                            'company': str,
+                            'address': str,
+                            'benefits': str})
 
 
-def scrap_itviec(page_num=1, limit=8) -> list[Entry]:
+def scrap_itviec(page_num: int, limit: int) -> list[Entry]:
     results: list[Entry] = []
 
     url = f'https://itviec.com/it-jobs/ho-chi-minh-hcm?page={page_num}'
@@ -40,3 +42,25 @@ def scrap_itviec(page_num=1, limit=8) -> list[Entry]:
         results.append(data)
 
     return results
+
+
+def scrap_vietnamwork(page_num: int, limit: int) -> list[Entry]:
+    # In GG Chrome Network tab, filter by "queries?" call when refresh page to catch api key & app id
+    index = SearchClient.create('JF8Q26WWUD', 'ecef10153e66bbd6d54f08ea005b60fc').init_index('vnw_job_v2')
+    search_result = index.search(
+        '',
+        request_options={
+            'attributesToRetrieve': ['jobId', 'company', 'alias', 'objectID', 'jobTitle', 'jobLocations', 'benefits'],
+            'facetFilters': [["locationIds:29"]],  # filter jobs by HCM city
+            'page': page_num - 1,
+            'hitsPerPage': limit,
+        }
+    )['hits']
+
+    return [*map(lambda r: Entry(elem_id=r['jobId'],
+                                 title=r['jobTitle'],
+                                 company=r['company'],
+                                 address=r['jobLocations'][0],
+                                 url='/' + r['alias'] + '-' + r['objectID'] + '-jv',  # append '-je' for Vietnamese page
+                                 benefits=', '.join([*map(lambda b: b['benefitName'], r['benefits'])])
+                                 ), search_result)]

@@ -1,3 +1,5 @@
 flask~=1.1.2
 requests~=2.25.1
 bs4~=0.0.1
+algoliasearch~=2.4.0
+beautifulsoup4~=4.9.3
