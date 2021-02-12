@@ -8,14 +8,21 @@ Entry = TypedDict('Entry', {'elem_id': str,
                             'url': str,
                             'company': str,
                             'address': str,
-                            'benefits': str})
+                            'benefits': str,
+                            'salary': str})
+
+
+# simulate a login
+# get this session from real login, this may expires after a while
+session = 'kEXvIw%2FzsOUTaal4HzudkOFOk%2FlMZ5tSZhGU8MdQ8OF4V2DxPSWLyyZgR1SsyHQhjDaoedx4kotzB3lk8nj%2BwvUJ2V4NWiCLH3oVYKTbtkv9f46lKHXaf1TwBuXW3qSPjIYBlbWEpctCfEiERjqBoKa%2BpBrBQ24TZ7G1%2B%2BPg14RiiXEU%2FmDWc20LAioYVbUklWja1CVwIbyWulOHFkezmzoQ%2F%2FIQNLcG61F0wEKVrRMc7n91HNV11VBvAjkJr%2Bbvo%2BzroCu1uzHTmT7BJc5ycjTwAoY%3D--sS1MpDfHnrZJ6DG3--BA4QpolQjMtzLglAwdkW4w%3D%3D'
 
 
 def scrap_itviec(page_num: int, limit: int) -> list[Entry]:
     results: list[Entry] = []
 
     url = f'https://itviec.com/it-jobs/ho-chi-minh-hcm?page={page_num}'
-    page = requests.get(url)
+    page = requests.get(url, cookies={'_ITViec_session': session})
+
     soup = BeautifulSoup(page.content, 'html.parser')
 
     container = soup.find(id='container')
@@ -27,6 +34,7 @@ def scrap_itviec(page_num: int, limit: int) -> list[Entry]:
         data['elem_id'] = elem.attrs['id']
         data['title'] = elem.find(class_='title').text.strip()
         data['url'] = elem.attrs['data-search--job-selection-job-url']
+        data['salary'] = elem.find(class_='svg-icon__text').text.strip()
 
         if data['url'] is not None:
             jd_link = f"https://itviec.com/{data['url']}"
