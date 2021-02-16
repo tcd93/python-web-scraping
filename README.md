@@ -8,7 +8,7 @@ using Python's [`requests`](https://requests.readthedocs.io/en/master/)
 First we go to the target url: https://jobhopin.com/viec-lam/vi?cities=ho-chi-minh&type=job
 
 This is what we'd see:
-![index.png](img/1.png/img.png)
+![index.png](img/jobhopin/1.png)
 
 If we open it via Chrome's Developer Console, we get an entirely different page:
 
