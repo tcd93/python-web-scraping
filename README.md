@@ -8,6 +8,7 @@ using Python's [`requests`](https://requests.readthedocs.io/en/master/)
 First we go to the target url: https://jobhopin.com/viec-lam/vi?cities=ho-chi-minh&type=job
 
 This is what we'd see:
+
 ![index.png](img/jobhopin/1.png)
 
 If we open it via Chrome's Developer Console, we get an entirely different page:
@@ -21,16 +22,20 @@ returns a bunch of Javascript code to the browser instead of an HTML page like n
 In this case, we can check if the job data is already embedded into the JS codes itself (this is a technique 
 called **data de-hydration** by front-end gurus). Open up search drawer (CTRL+SHIFT+F12) in Devtool and search 
 by company name (because company name is likely not affected translation libraries and easily searchable):
+
 ![search_result.png](img/jobhopin/3.png)
 
 Nothing's found, data might be coming from an external API request, we need to investigate the Network tab more 
 thoroughly (_tips: filter requests by __XHR___):
+
 ![portal.png](img/jobhopin/4.png)
 
 As guessed, the info can be easily retrievable by making `GET` requests to [admin.jobhop.vn](admin.jobhop.vn/api/public/jobs);
 open up another browser tab and paste in
 [this link](https://admin.jobhop.vn/api/public/jobs/?cities=79&industries=&levels=&jobTypes=&salaryMin=0&page=1&pageSize=10&ordering=)
+
 ![img_1.png](img/jobhopin/6.png)
+
 Now we can easily get what we need:
 ```python
 import requests
@@ -46,10 +51,12 @@ If we did not log in, the API will not display `salary` information, `salaryMin`
 like the above image
 
 Log in the web page and catch the Network request again, salary info will be returned from API:
+
 ![salary.png](img/jobhopin/7.png)
 
 Comparing with previously non-logged in request, we see that this time the request header includes a **Bearer token**
 (see OAuth2.0 authorization [document](https://tools.ietf.org/html/rfc6750)):
+
 ![bearer.png](img/jobhopin/8.png)
 
 If this time we use Postman to send the `GET` request with this token attached, we can retrieve the salary info 
@@ -77,6 +84,7 @@ In the above example, I used my Google's account to log in, so the token was com
 but for simplicity's sake, we're going to retrieve the access token from Jobhopin's own authorization service.
 
 Register a Jobhopin account, navigate to their login page, Open Network tab & log in again:
+
 ![img.png](img/jobhopin/9.png)
 
 We can see that the token is returned from their server at endpoint `/account/api/v1/login/` if we include
