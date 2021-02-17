@@ -106,6 +106,77 @@ json = requests.get(url, headers={
 result = filter(lambda v: True if v['salaryMin'] is not None else False, json)
 print(*result)
 ```
+---
+### Scraping Itviec.com
+Target url: https://itviec.com/it-jobs/ho-chi-minh-hcm
+
+![img.png](img/itviec/0.png)
+
+Again, by checking the site from Devtool's _preview_ tab, we can see that the contents stay mostly the same, 
+except the right-hand side part:
+
+![img.png](img/itviec/1.png)
+
+Job details are fetched after the main page is loaded, and most of what we need is inside that details page, 
+so we need a way to fetch these data.
+
+This is the HTML structure of a job item from the list:
+
+![img.png](img/itviec/2.png)
+
+Notice the attribute `data-search--job-selection-job-url`, navigate to that [link](https://itviec.com/it-jobs/frontend-engineer-vuejs-reactjs-line-vietnam-5858/content) 
+gives us a raw HTML page with all the details we need.
+
+So, to scrap this page, there needs to be two steps:
+1. fetch the main page, parse the HTML, get the link from attribute `data-search--job-selection-job-url`
+2. fetch the page from that link, parse the HTML, get the data
+
+Parsing the HTML contents is very easy in Python with [_BeautifulSoup_](https://pypi.org/project/beautifulsoup4/), 
+checkout the code in `scrapper.py` for working example.
+
+**Getting the salary**
+
+Like the previous website, the salary info of jobs are hidden behind a login, we need to identify what authorization 
+technique is used.
+
+By debugging the login workflow from Network tab, you'll notice a id stored in Cookie after `/sign_in` request:
+
+![img.png](img/itviec/3.png)
+
+That ID is what let the server knows _who_ the client is, without it, it'll treat the client as anonymous and do not 
+return the salary information.
+
+By attaching that ID into each request's cookie, you'll _trick_ the server into thinking that this request is made 
+by a valid, logged-in user (well, it is, technically):
+
+```python
+import requests
+
+session = '5j1C3ZA...' ## your session ID here
+url = 'https://itviec.com/it-jobs/ho-chi-minh-hcm'
+page = requests.get(url, cookies={'_ITViec_session': session})
+```
+
+Now you can also scrap the salary range from returned HTML content.
+
+**Automating stuff**
+
+Just like the bearer token, session ID also has an expiry time, but you can use code to emulate a login; steps are 
+very similar to previous example, but this time we'd need to include something called __CSRF token__ (`authenticity_token`) 
+in the login `POST` request, here's a valid form data from `/sign-in` page:
+
+![img.png](img/itviec/4.png)
+
+This token's purpose is to prevent [_phishing_ attacks](https://owasp.org/www-community/attacks/csrf), it's a random-generated 
+string by the server upon first request, and it's attached to the HTML page (usually as a hidden input)
+
+![img.png](img/itviec/5.png)
+
+With that, we can now use Python's `requests` package to "automate" logins and retrieve session id from response header. 
+I'm too lazy to include code here (because _itviec_'s session expiry time is actually quite long, and does not expire 
+upon logout! no need to write extra codes, lol)
+
+_FYI, we also just discovered a security hole in jobhopin.com!_
 
 ---
 
