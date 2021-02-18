@@ -194,6 +194,14 @@ search_result = index.search(...)
 
 ---
 
+## Conclusion
+
+No website is like another, understanding how it's made is key to scraping it effectively.
+
+`selenium` is (most of the time) overrated when you have basic knowledge about HTML & common authorization techniques.
+
+---
+
 ## Requirement
 Python 3.9
 
