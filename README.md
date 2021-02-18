@@ -4,6 +4,9 @@ This is a tutorial (with code sample) for scraping job contents from job searchi
 , [_jobhopin_](https://jobhopin.com/)
 using Python's [`requests`](https://requests.readthedocs.io/en/master/)
 
+#### Before we begin
+Reads the description of the `robots.txt` files of the sites we're scraping (for example: https://www.vietnamworks.com/robots.txt), make sure we play nice & don't violate the rules; also, don't make too many requests at the same time.
+
 ---
 
 ### Scraping Jobhopin.com
@@ -32,7 +35,7 @@ thoroughly (_tips: filter requests by __XHR___):
 
 ![portal.png](img/jobhopin/4.png)
 
-As guessed, the info can be easily retrievable by making `GET` requests to [admin.jobhop.vn](admin.jobhop.vn/api/public/jobs);
+As guessed, the info can be easily retrievable by making `GET` requests to admin.jobhop.vn/api/public/jobs;
 open up another browser tab and paste in
 [this link](https://admin.jobhop.vn/api/public/jobs/?cities=79&industries=&levels=&jobTypes=&salaryMin=0&page=1&pageSize=10&ordering=)
 
