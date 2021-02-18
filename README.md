@@ -213,3 +213,9 @@ Python 3.9
 
 ## Start Server (port 8080)
 `python server.py`
+
+---
+
+### Deploying to cloud
+
+Using `AWS Lambda` or `AWS Batch` is a good option because the "scrapper" is not on a fixed IP address (meaning harder to ban)
