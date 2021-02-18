@@ -200,7 +200,7 @@ No website is like another, understanding how it's made is key to scraping it ef
 
 `selenium` is (most of the time) overrated when you have basic knowledge about HTML & common authorization techniques.
 
----
+This repo includes a sample Flask server which has two `GET` endpoints: `/itviec` & `/vietnamwork`, follow the intructions here to get it running.
 
 ## Requirement
 Python 3.9
@@ -208,5 +208,5 @@ Python 3.9
 ## Install
 `pip install -r requirements.txt`
 
-## Start Server
+## Start Server (port 8080)
 `python server.py`
