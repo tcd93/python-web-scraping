@@ -1,8 +1,10 @@
 This is a tutorial (with code sample) for scraping job contents from job searching pages such as 
 [_itviec_](itviec.com)
-, [_vietnamwork_](https://www.vietnamworks.com/)
+, [_vietnamworks_](https://www.vietnamworks.com/)
 , [_jobhopin_](https://jobhopin.com/)
 using Python's [`requests`](https://requests.readthedocs.io/en/master/)
+
+---
 
 ### Scraping Jobhopin.com
 First we go to the target url: https://jobhopin.com/viec-lam/vi?cities=ho-chi-minh&type=job
@@ -175,6 +177,20 @@ string by the server upon first request, and it's attached to the HTML page (usu
 With that, we can now use Python's `requests` package to "automate" logins and retrieve session id from response header. 
 I'm too lazy to include code here (because _itviec_'s session expiry time is actually quite long, and does not expire 
 upon logout! no need to write extra codes, lol)
+
+---
+
+### Scraping Vietnamworks.com
+
+This one is the easiest of the bunch, because they don't store job data at their server; instead, they delegate that task to a 3rd party service called [Algolia search](https://www.algolia.com/products/search/).
+
+So we don't even need to touch their site to get the contents (the job list is loaded dynamically, `requests` would not work anyway). 
+What we need is the `app_id` and `api_id` for the Algolia [search client](https://github.com/algolia/algoliasearch-client-python) to connect to their service, to catch those keys, Chrome's devtool is your best friend, but I'm going to simplify your work and write them out:
+```python
+from algoliasearch.search_client import SearchClient
+index = SearchClient.create('JF8Q26WWUD', 'ecef10153e66bbd6d54f08ea005b60fc').init_index('vnw_job_v2')
+search_result = index.search(...)
+```
 
 ---
 
