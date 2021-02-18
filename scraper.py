@@ -12,10 +12,11 @@ Entry = TypedDict('Entry', {'elem_id': str,
                             'salary': str})
 
 
-# simulate a login
+# simulate a login to get salary range
 # get this session from real login, this may expires after a while
-session = 'kEXvIw%2FzsOUTaal4HzudkOFOk%2FlMZ5tSZhGU8MdQ8OF4V2DxPSWLyyZgR1SsyHQhjDaoedx4kotzB3lk8nj%2BwvUJ2V4NWiCLH3oVYKTbtkv9f46lKHXaf1TwBuXW3qSPjIYBlbWEpctCfEiERjqBoKa%2BpBrBQ24TZ7G1%2B%2BPg14RiiXEU%2FmDWc20LAioYVbUklWja1CVwIbyWulOHFkezmzoQ%2F%2FIQNLcG61F0wEKVrRMc7n91HNV11VBvAjkJr%2Bbvo%2BzroCu1uzHTmT7BJc5ycjTwAoY%3D--sS1MpDfHnrZJ6DG3--BA4QpolQjMtzLglAwdkW4w%3D%3D'
-
+# to retrieve the session id from cookie: https://developers.google.com/web/tools/chrome-devtools/storage/cookies
+# then copy the string of key "_ITViec_session" at site itviec.com and paste it here
+session = '[input the string of _ITViec_session]'
 
 def scrap_itviec(page_num: int, limit: int) -> list[Entry]:
     results: list[Entry] = []

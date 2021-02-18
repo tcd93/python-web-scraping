@@ -176,9 +176,10 @@ With that, we can now use Python's `requests` package to "automate" logins and r
 I'm too lazy to include code here (because _itviec_'s session expiry time is actually quite long, and does not expire 
 upon logout! no need to write extra codes, lol)
 
-_FYI, we also just discovered a security hole in jobhopin.com!_
-
 ---
+
+## Requirement
+Python 3.9
 
 ## Install
 `pip install -r requirements.txt`
